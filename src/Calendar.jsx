@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css"; // Estilos base
-import "react-date-range/dist/theme/default.css"; // Tema predeterminado
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import "./Calendar.css";
 import es from "date-fns/locale/es";
 
 function Calendario() {
   const [fechasOcupadas, setFechasOcupadas] = useState([]);
-  const [monthsToShow, setMonthsToShow] = useState(2);
+  const [monthsToShow, setMonthsToShow] = useState(
+    window.innerWidth <= 768 ? 1 : 2
+  );
 
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
@@ -15,12 +17,12 @@ function Calendario() {
     key: "selection",
   });
 
+  // console.log(selectionRange.startDate);
+  // console.log(selectionRange.endDate);
   console.log(selectionRange.startDate?.toISOString().split("T").shift());
   console.log(selectionRange.endDate?.toISOString().split("T").shift());
-
   useEffect(() => {
     const reservationsFromServer = [
-      { start: "2024-03-22", end: "2024-03-25" },
       { start: "2024-04-12", end: "2024-04-18" },
       { start: "2024-04-27", end: "2024-04-30" },
     ];
@@ -29,24 +31,22 @@ function Calendario() {
 
     reservationsFromServer.forEach((reservation) => {
       const { start, end } = reservation;
-      const startDate = new Date(start);
-      startDate.setDate(startDate.getDate() + 1);
+      const startDate = new Date(start + "T00:00:00-03:00");
+      
 
-      const endDate = new Date(end);
-      endDate.setDate(endDate.getDate() + 1);
+      const endDate = new Date(end + "T00:00:00-03:00");
+     
 
       const currentDate = startDate;
-      console.log({ currentDate });
       while (currentDate <= endDate) {
-        disabledDates.push(currentDate.toISOString().slice(0, 10));
+        disabledDates.push(new Date(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);
       }
     });
+    console.log(disabledDates);
 
     setFechasOcupadas(disabledDates);
   }, []);
-
-  console.log(fechasOcupadas);
 
   const handleSelect = (ranges) => {
     setSelectionRange(ranges.selection);
@@ -81,7 +81,6 @@ function Calendario() {
           direction="horizontal"
           locale={es}
           minDate={new Date()}
-          
         />
       </div>
     </div>
