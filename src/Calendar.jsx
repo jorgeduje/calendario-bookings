@@ -7,6 +7,7 @@ import es from "date-fns/locale/es";
 
 function Calendario() {
   const [fechasOcupadas, setFechasOcupadas] = useState([]);
+
   const [monthsToShow, setMonthsToShow] = useState(
     window.innerWidth <= 768 ? 1 : 2
   );
@@ -17,10 +18,9 @@ function Calendario() {
     key: "selection",
   });
 
-  // console.log(selectionRange.startDate);
-  // console.log(selectionRange.endDate);
   console.log(selectionRange.startDate?.toISOString().split("T").shift());
   console.log(selectionRange.endDate?.toISOString().split("T").shift());
+
   useEffect(() => {
     const reservationsFromServer = [
       { start: "2024-04-12", end: "2024-04-18" },
@@ -32,10 +32,8 @@ function Calendario() {
     reservationsFromServer.forEach((reservation) => {
       const { start, end } = reservation;
       const startDate = new Date(start + "T00:00:00-03:00");
-      
 
       const endDate = new Date(end + "T00:00:00-03:00");
-     
 
       const currentDate = startDate;
       while (currentDate <= endDate) {
@@ -43,7 +41,6 @@ function Calendario() {
         currentDate.setDate(currentDate.getDate() + 1);
       }
     });
-    console.log(disabledDates);
 
     setFechasOcupadas(disabledDates);
   }, []);
