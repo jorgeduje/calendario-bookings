@@ -12,12 +12,18 @@ function Calendario() {
     window.innerWidth <= 768 ? 1 : 2
   );
 
+  const now = new Date(); // Fecha y hora actual en el huso horario local
+  const offset = now.getTimezoneOffset() * 60000; // Offset en milisegundos
+  
+  // Crear las fechas para startDate y endDate ajustadas al huso horario de Argentina (UTC-3)
+  const startDate = new Date(now - offset - (3 * 60 * 60 * 1000)); // Restar 3 horas en milisegundos
+  const endDate = new Date(now - offset - (3 * 60 * 60 * 1000)); // Restar 3 horas en milisegundos
+  
   const [selectionRange, setSelectionRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate,
+    endDate,
     key: "selection",
   });
-
   console.log(selectionRange.startDate?.toISOString().split("T").shift());
   console.log(selectionRange.endDate?.toISOString().split("T").shift());
 
